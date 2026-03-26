@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: pizzarria-backend-dev
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGO_URI=${MONGO_URI}
+      - JWT_SECRET=${JWT_SECRET}
+    env_file:
+      - .env
+    volumes:
+      # Mount source code for hot-reload
+      - .:/app
+      - /app/node_modules
+    networks:
+      - pizzarria-network
+    command: npm run dev
+
+networks:
+  pizzarria-network:
+    driver: bridge

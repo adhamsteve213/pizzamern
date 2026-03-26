@@ -1,0 +1,34 @@
+[package]
+name = "pizzarria-backend"
+version = "0.1.0"
+description = "Pizzarria backend on Wasmer"
+
+[deploy]
+# Build using Dockerfile in this directory
+build = { dockerfile = "Dockerfile", context = "." }
+
+[commands]
+start = "node server.js"
+
+# Ensure PORT is provided by platform; default to 8080 if unset
+[env]
+PORT = "8080"
+ALLOWED_ORIGINS = "https://candid-kringle-d5677f.netlify.app,http://candid-kringle-d5677f.netlify.app,https://adhamsteve213.wasmer.app,http://adhamsteve213.wasmer.app"
+
+# Pass through secrets at deploy time; values are set via `wasmer env set`
+# Example keys you will configure:
+# MONGO_URI = { source = "runtime" }
+# JWT_SECRET = { source = "runtime" }
+# ALLOWED_ORIGINS = { source = "runtime" }
+
+[[services]]
+name = "http"
+protocol = "http"
+port = 8080
+# Domain hint for clarity (binding handled by Wasmer)
+# domain = "adhamsteve213.wasmer.app"
+
+# Health check
+[services.health]
+path = "/health"
+interval = "30s"
